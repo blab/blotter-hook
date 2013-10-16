@@ -59,7 +59,7 @@ end
 #deploy
 
 # listen
-post '/hooks/' do
+post '/' do
   push = JSON.parse(params[:payload])
   "I got some JSON: #{push.inspect}"
 end
