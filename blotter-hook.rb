@@ -58,8 +58,15 @@ end
 #build
 #deploy
 
+string = "test"
+
 # listen
 post '/' do
-  push = JSON.parse(params[:payload])
-  "I got some JSON: #{push.inspect}"
+  	push = JSON.parse(params[:payload])
+  	string = push.inspect
+end
+
+# serve
+get '/' do
+  	string
 end
