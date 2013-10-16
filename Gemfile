@@ -8,3 +8,6 @@ gem 'less'
 
 # deploying
 gem 's3_website'
+
+# webhook
+gem 'sinatra'

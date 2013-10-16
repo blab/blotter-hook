@@ -1,6 +1,8 @@
 # update with git
 def update
 
+	puts "updating..."    
+
 	# start by cloning blotter repo
 	if !Dir.exists?("blotter")
 		`git clone --recursive https://github.com/blab/blotter.git`
@@ -22,6 +24,8 @@ end
 # build with jekyll
 def build
 
+	puts "building..."
+	
 	# preprocess markdown
 	`ruby scripts/preprocess_markdown.rb`
 
@@ -39,12 +43,20 @@ end
 # deploy to s3
 def deploy
     
+	puts "deploying..."    
+    
   	# run s3_website
 	`s3_website push --headless --site=blotter/_site`
 
 end
 
 # run script
-update
-build
-deploy
+#update
+#build
+#deploy
+
+# listen
+post '/hooks/' do
+  push = JSON.parse(params[:payload])
+  "I got some JSON: #{push.inspect}"
+end
