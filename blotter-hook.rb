@@ -10,7 +10,6 @@ def update
 	Dir.chdir("blotter")
 	
 	# git pull
-	puts "git pull"
 	`git pull origin master`
 	`git submodule foreach git pull origin master`	# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
 	`git submodule update`
@@ -26,8 +25,10 @@ def build
 	# drop into blotter dir
 	Dir.chdir("blotter")
 	
+	# preprocess markdown
+	`ruby scripts/preprocess_markdown.rb`
+	
 	# run jekyll
-	puts "jekyll build"
 	`jekyll build`
 	
 	# climb back up to parent dir
@@ -39,7 +40,6 @@ end
 def deploy
     
   	# run s3_website
-	puts "s3_website push --headless --site=blotter/_site"
 	`s3_website push --headless --site=blotter/_site`
 
 end
