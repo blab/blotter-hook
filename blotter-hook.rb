@@ -16,7 +16,7 @@ def update
 	`git submodule update`
 	
 	# climb back up to parent dir
-	Dir.chdir()
+	Dir.chdir("..")
 
 end
 
@@ -31,19 +31,16 @@ def build
 	`jekyll build`
 	
 	# climb back up to parent dir
-	Dir.chdir()	
+	Dir.chdir("..")	
 
 end
 
 # deploy to s3
 def deploy
-
-  :s3_key    => ENV['S3_KEY'],
-  :s3_secret => ENV['S3_SECRET']
-  :s3_bucket => ENV['S3_SECRET']  
-  
-  puts "s3cmd --access-key=#{:s3_key}"
- # `s3cmd --access-key=#{:s3_key}`
+    
+  	# run s3_website
+	puts "s3_website push"
+	`s3_website push --site=blotter/_site/`
 
 end
 

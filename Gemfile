@@ -7,4 +7,4 @@ gem 'therubyracer'
 gem 'less'
 
 # deploying
-gem 's3cmd'
+gem 's3_website'
