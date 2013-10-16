@@ -1,3 +1,6 @@
+require 'sinatra'
+require 'json'
+
 # update with git
 def update
 
