@@ -1,13 +1,17 @@
-require 'rugged'
-
-# build script
-def build
+# update with git
+def update
 
 	# start by cloning blotter repo
 	if !Dir.exists?("blotter")
-		Repository.clone_at("https://github.com/blab/blotter.git")
+		`git clone --recursive https://github.com/blab/blotter.git`
 	end
+	
+	# drop into blotter dir
+	Dir.chdir("blotter")
+	
+	# git pull
+	`git pull --recurse-submodules`
 
 end
 
-build
+update
