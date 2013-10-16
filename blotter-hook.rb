@@ -22,12 +22,12 @@ end
 # build with jekyll
 def build
 
-	# drop into blotter dir
-	Dir.chdir("blotter")
-	
 	# preprocess markdown
 	`ruby scripts/preprocess_markdown.rb`
-	
+
+	# drop into blotter dir
+	Dir.chdir("blotter")
+		
 	# run jekyll
 	`jekyll build`
 	
