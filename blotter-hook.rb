@@ -39,8 +39,8 @@ end
 def deploy
     
   	# run s3_website
-	puts "s3_website push"
-	`s3_website push --site=blotter/_site/`
+	puts "s3_website push --headless --site=blotter/_site"
+	`s3_website push --headless --site=blotter/_site`
 
 end
 
