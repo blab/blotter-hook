@@ -58,11 +58,6 @@ get '/' do
   	"blotter-hook is listening"
 end
 
-# run
-update
-build
-deploy
-
 # listen
 post '/' do
 
