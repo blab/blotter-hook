@@ -58,15 +58,14 @@ end
 #build
 #deploy
 
-repo = "test"
+push = "test"
 
 # listen
 post '/' do
   	push = JSON.parse(params[:payload])
-  	repo = push["repository"]
 end
 
 # serve
 get '/' do
-  	repo
+  	push
 end
