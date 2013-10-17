@@ -35,16 +35,16 @@ def deploy
 end
 
 commit = ""
-updated = false
-built = false
-deployed = false
+is_updated = false
+is_built = false
+is_deployed = false
 
 # run
 puts "Start up"
 a = Thread.new {
-	updated? = update
-	built? = build
-	deployed? = deploy
+	is_updated = update
+	is_built = build
+	is_deployed = deploy
 }
 
 # serve
@@ -52,9 +52,9 @@ get '/' do
 	"
 	<p><em>blotter-hook</em>
 	<p>Last commit: #{commit}
-	<p>Updated: #{updated}
-	<p>Built: #{built}
-	<p>Deployed: #{deployed}
+	<p>Updated: #{is_updated}
+	<p>Built: #{is_built}
+	<p>Deployed: #{is_deployed}
 	"	
 end
 
@@ -71,9 +71,9 @@ post '/' do
 
 		# run
 		a = Thread.new {
-			updated? = update
-			built? = build
-			deployed? = deploy
+			is_updated = update
+			is_built = build
+			is_deployed = deploy
   		}	
   	
   	end
