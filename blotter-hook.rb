@@ -53,24 +53,24 @@ def deploy
 
 end
 
-# run script
-#update
-#build
-#deploy
-
-string = "test"
-
 # listen
 post '/' do
 
 	# check if push is legitimate
   	push = JSON.parse(params[:payload])
-  	string = push["repository"]["owner"]["name"]
+  	owner = push["repository"]["owner"]["name"]
+  	if ["blab","trvrb","cykc"].include?(owner)
+
+		# run script
+		update
+		build
+		deploy
   	
+  	end
   	
 end
 
 # serve
 get '/' do
-  	string
+  	"blotter-hook is listening"
 end
