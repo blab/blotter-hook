@@ -2,7 +2,7 @@ require 'sinatra'
 require 'json'
 
 # update with git
-def run
+def update
 
 	puts "start update"    
 
@@ -60,15 +60,11 @@ end
 
 # run
 puts "Start up"
-#a = Thread.new {
-#	update
-#	build
-#	deploy
-#}
-
-update
-build
-deploy
+a = Thread.new {
+	update
+	build
+	deploy
+}
 
 # listen
 post '/' do
