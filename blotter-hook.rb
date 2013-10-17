@@ -72,7 +72,7 @@ post '/' do
   	owner = push["repository"]["owner"]["name"]
   	if ["blab","trvrb","cykc"].include?(owner)
 
-		Thead.kill(a)
+		Thread.kill(a)
 
 		# run
 		a = Thread.new {
