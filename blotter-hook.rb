@@ -50,7 +50,7 @@ a = Thread.new {
 # serve
 get '/' do
 	"
-	<p><em>blotter-hook</em>
+	<p><b>blotter-hook</b>
 	<p>Last commit: #{commit}
 	<p>Updated: #{is_updated}
 	<p>Built: #{is_built}
