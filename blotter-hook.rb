@@ -76,6 +76,14 @@ a = Thread.new {
 	run
 }
 
+# serve
+get '/' do
+	"<p>Last commit #{commit}"
+	"<p>Update: #{updated}"
+	"<p>Built: #{built}"
+	"<p>Deployed: #{deployed}"	
+end
+
 # listen
 post '/' do
 
