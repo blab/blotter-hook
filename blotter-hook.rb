@@ -60,7 +60,7 @@ end
 
 # run
 puts "Start up"
-worker = Thread.new {
+a = Thread.new {
 	update
 	build
 	deploy
@@ -74,10 +74,10 @@ post '/' do
   	owner = push["repository"]["owner"]["name"]
   	if ["blab","trvrb","cykc"].include?(owner)
 
-		Thread.kill(worker)
+		Thread.kill(a)
 
 		# run
-		worker = Thread.new {
+		a = Thread.new {
 			update
 			build
 			deploy
