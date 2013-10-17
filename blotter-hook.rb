@@ -58,12 +58,22 @@ def deploy
 	
 end
 
-# run
-puts "Start up"
-a = Thread.new {
+# all three
+def run
 	update
 	build
 	deploy
+end
+
+commit = ""
+updated = false
+built = false
+deployed = false
+
+# run
+puts "Start up"
+a = Thread.new {
+	run
 }
 
 # listen
@@ -72,15 +82,14 @@ post '/' do
 	# check if push is legitimate
   	push = JSON.parse(params[:payload])
   	owner = push["repository"]["owner"]["name"]
+  	commit = push["after"]
   	if ["blab","trvrb","cykc"].include?(owner)
 
 		Thread.kill(a)
 
 		# run
 		a = Thread.new {
-			update
-			build
-			deploy
+			run
   		}	
   	
   	end
