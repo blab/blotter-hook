@@ -58,16 +58,11 @@ def deploy
 	
 end
 
-# full circle
-def run
+# run
+worker = Thread.new {
 	update
 	build
 	deploy
-end
-
-# run
-a = Thread.new {
-	run
 }
 
 # listen
@@ -78,11 +73,13 @@ post '/' do
   	owner = push["repository"]["owner"]["name"]
   	if ["blab","trvrb","cykc"].include?(owner)
 
-		Thread.kill(a)
+		Thread.kill(worker)
 
 		# run
-		a = Thread.new {
-			run
+		worker = Thread.new {
+			update
+			build
+			deploy
   		}	
   	
   	end
