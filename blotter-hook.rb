@@ -63,7 +63,7 @@ repo = "test"
 # listen
 post '/' do
   	push = JSON.parse(params[:payload])
-  	repo = push[:repository]
+  	repo = push["repository"]
 end
 
 # serve
