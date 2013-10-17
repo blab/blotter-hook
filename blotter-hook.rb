@@ -53,6 +53,11 @@ def deploy
 
 end
 
+# serve
+get '/' do
+  	"blotter-hook is listening"
+end
+
 # run
 update
 build
@@ -75,7 +80,4 @@ post '/' do
   	
 end
 
-# serve
-get '/' do
-  	"blotter-hook is listening"
-end
+
