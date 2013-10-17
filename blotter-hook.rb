@@ -53,6 +53,11 @@ def deploy
 
 end
 
+# run
+update
+build
+deploy
+
 # listen
 post '/' do
 
@@ -61,7 +66,7 @@ post '/' do
   	owner = push["repository"]["owner"]["name"]
   	if ["blab","trvrb","cykc"].include?(owner)
 
-		# run script
+		# run
 		update
 		build
 		deploy
