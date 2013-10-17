@@ -57,7 +57,7 @@ end
 #  	"blotter-hook is listening"
 #end
 
-# startup
+# run
 a = Thread.new {
 	update
 	build
@@ -72,10 +72,14 @@ post '/' do
   	owner = push["repository"]["owner"]["name"]
   	if ["blab","trvrb","cykc"].include?(owner)
 
+		Thead.kill(a)
+
 		# run
-		update
-		build
-		deploy
+		a = Thread.new {
+			update
+			build
+			deploy
+  		}	
   	
   	end
   	
