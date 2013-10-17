@@ -21,6 +21,7 @@ def update
 	# climb back up to parent dir
 	Dir.chdir("..")
 	
+	updated = true
 	puts "finish update"    	
 
 end
@@ -42,6 +43,7 @@ def build
 	# climb back up to parent dir
 	Dir.chdir("..")	
 	
+	built = true
 	puts "finish build"	
 
 end
@@ -54,12 +56,16 @@ def deploy
   	# run s3_website
 	`s3_website push --headless --site=blotter/_site`
 	
+	deployed = true
 	puts "finish deploy"  	
 	
 end
 
 # all three
 def run
+	updated = false
+	built = false
+	deployed = false
 	update
 	build
 	deploy
@@ -78,10 +84,12 @@ a = Thread.new {
 
 # serve
 get '/' do
-	"<p>Last commit #{commit}"
-	"<p>Update: #{updated}"
-	"<p>Built: #{built}"
-	"<p>Deployed: #{deployed}"	
+	"
+	<p>Last commit #{commit}
+	<p>Update: #{updated}
+	<p>Built: #{built}
+	<p>Deployed: #{deployed}
+	"	
 end
 
 # listen
