@@ -17,8 +17,6 @@ def update
 	# git pull
 	`git pull origin master`
 	`git submodule foreach git pull origin master`	# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
-	`git submodule init`
-	`git submodule update`
 	
 	# climb back up to parent dir
 	Dir.chdir("..")
