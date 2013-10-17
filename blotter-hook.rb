@@ -3,72 +3,35 @@ require 'json'
 
 # update with git
 def update
-
 	puts "start update"    
-
-	# start by cloning blotter repo
-	if !Dir.exists?("blotter")
+	if !Dir.exists?("blotter")							# start by cloning blotter repo
 		`git clone --recursive https://github.com/blab/blotter.git`
 	end
-	
-	# drop into blotter dir
-	Dir.chdir("blotter")
-	
-	# git pull
-	`git pull origin master`
-	`git submodule foreach git pull origin master`	# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
-	
-	# climb back up to parent dir
-	Dir.chdir("..")
-	
-	updated = true
+	Dir.chdir("blotter")								# drop into blotter dir
+	`git pull origin master`							# git pull
+	`git submodule foreach git pull origin master`		# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
+	Dir.chdir("..")										# climb back up to parent dir
 	puts "finish update"    	
-
+	return true
 end
 
 # build with jekyll
 def build
-
 	puts "start build"
-	
-	# preprocess markdown
-	`ruby scripts/preprocess_markdown.rb`
-
-	# drop into blotter dir
-	Dir.chdir("blotter")
-		
-	# run jekyll
-	`jekyll build`
-	
-	# climb back up to parent dir
-	Dir.chdir("..")	
-	
-	built = true
+	`ruby scripts/preprocess_markdown.rb`				# preprocess markdown
+	Dir.chdir("blotter")								# drop into blotter dir
+	`jekyll build`										# run jekyll
+	Dir.chdir("..")										# climb back up to parent dir
 	puts "finish build"	
-
+	return true
 end
 
 # deploy to s3
 def deploy
-
 	puts "start deploy"    
-    
-  	# run s3_website
-	`s3_website push --headless --site=blotter/_site`
-	
-	deployed = true
+	`s3_website push --headless --site=blotter/_site`	# run s3_website
 	puts "finish deploy"  	
-	
-end
-
-# all three
-def run
-	updated = false
-	built = false
-	deployed = false
-	update
-	build
-	deploy
+	return true
 end
 
 commit = ""
@@ -79,14 +42,17 @@ deployed = false
 # run
 puts "Start up"
 a = Thread.new {
-	run
+	updated? = update
+	built? = build
+	deployed? = deploy
 }
 
 # serve
 get '/' do
 	"
-	<p>Last commit #{commit}
-	<p>Update: #{updated}
+	<p><em>blotter-hook</em>
+	<p>Last commit: #{commit}
+	<p>Updated: #{updated}
 	<p>Built: #{built}
 	<p>Deployed: #{deployed}
 	"	
@@ -105,7 +71,9 @@ post '/' do
 
 		# run
 		a = Thread.new {
-			run
+			updated? = update
+			built? = build
+			deployed? = deploy
   		}	
   	
   	end
