@@ -2,9 +2,9 @@ require 'sinatra'
 require 'json'
 
 # update with git
-def update
+def run
 
-	puts "updating..."    
+	puts "start update"    
 
 	# start by cloning blotter repo
 	if !Dir.exists?("blotter")
@@ -20,13 +20,15 @@ def update
 	
 	# climb back up to parent dir
 	Dir.chdir("..")
+	
+	puts "finish update"    	
 
 end
 
 # build with jekyll
 def build
 
-	puts "building..."
+	puts "start build"
 	
 	# preprocess markdown
 	`ruby scripts/preprocess_markdown.rb`
@@ -39,29 +41,33 @@ def build
 	
 	# climb back up to parent dir
 	Dir.chdir("..")	
+	
+	puts "finish build"	
 
 end
 
 # deploy to s3
 def deploy
-    
-	puts "deploying..."    
+
+	puts "start deploy"    
     
   	# run s3_website
 	`s3_website push --headless --site=blotter/_site`
-
+	
+	puts "finish deploy"  	
+	
 end
 
-# serve
-#get '/' do
-#  	"blotter-hook is listening"
-#end
-
-# run
-a = Thread.new {
+# full circle
+def run
 	update
 	build
 	deploy
+end
+
+# run
+a = Thread.new {
+	run
 }
 
 # listen
@@ -76,9 +82,7 @@ post '/' do
 
 		# run
 		a = Thread.new {
-			update
-			build
-			deploy
+			run
   		}	
   	
   	end
