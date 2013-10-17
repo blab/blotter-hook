@@ -60,11 +60,15 @@ end
 
 # run
 puts "Start up"
-a = Thread.new {
-	update
-	build
-	deploy
-}
+#a = Thread.new {
+#	update
+#	build
+#	deploy
+#}
+
+update
+build
+deploy
 
 # listen
 post '/' do
