@@ -1,4 +1,4 @@
-require 'sinatra'
+#require 'sinatra'
 require 'json'
 
 # update with git
@@ -63,7 +63,7 @@ string = "test"
 # listen
 post '/' do
   	push = JSON.parse(params[:payload])
-  	string = push.inspect
+  	string = push["repository"]["owner"]["name"]
 end
 
 # serve
