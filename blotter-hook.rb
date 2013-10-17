@@ -66,6 +66,10 @@ post '/' do
   	owner = push["repository"]["owner"]["name"]
   	commit = push["after"]
   	if ["blab","trvrb","cykc"].include?(owner)
+  	
+  		is_updated = false
+		is_built = false
+		is_deployed = false
 
 		Thread.kill(a)
 
