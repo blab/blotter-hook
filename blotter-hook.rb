@@ -75,4 +75,7 @@ post '/' do
   	
 end
 
-
+# run
+update
+build
+deploy
