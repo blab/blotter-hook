@@ -57,6 +57,13 @@ end
 #  	"blotter-hook is listening"
 #end
 
+# startup
+a = Thread.new {
+	update
+	build
+	deploy
+}
+
 # listen
 post '/' do
 
@@ -74,7 +81,4 @@ post '/' do
   	
 end
 
-# startup
-#update
-#build
-#deploy
+
