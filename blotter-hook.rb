@@ -59,6 +59,7 @@ def deploy
 end
 
 # run
+puts "Start up"
 worker = Thread.new {
 	update
 	build
