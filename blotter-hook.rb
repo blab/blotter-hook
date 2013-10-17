@@ -77,6 +77,6 @@ post '/' do
 end
 
 # startup
-update
-build
-deploy
+#update
+#build
+#deploy
