@@ -54,9 +54,9 @@ def deploy
 end
 
 # serve
-get '/' do
-  	"blotter-hook is listening"
-end
+#get '/' do
+#  	"blotter-hook is listening"
+#end
 
 # listen
 post '/' do
