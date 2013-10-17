@@ -67,5 +67,5 @@ end
 
 # serve
 get '/' do
-  	push
+  	push.class
 end
