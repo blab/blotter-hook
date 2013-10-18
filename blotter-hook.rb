@@ -8,6 +8,7 @@ def update
 		`git clone --recursive https://github.com/blab/blotter.git`
 	end
 	Dir.chdir("blotter")								# drop into blotter dir
+	`git submodule init`								# add modules if missed in clone
 	`git pull origin master`							# git pull
 	`git submodule foreach git pull origin master`		# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
 	Dir.chdir("..")										# climb back up to parent dir
