@@ -5,6 +5,7 @@ ruby "1.9.3"
 gem 'jekyll'
 gem 'therubyracer'
 gem 'less'
+gem 'jekyll-press'
 
 # deploying
 gem 's3_website'
