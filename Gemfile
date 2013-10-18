@@ -6,6 +6,8 @@ gem 'jekyll'
 gem 'therubyracer'
 gem 'less'
 gem 'jekyll-press'
+gem 'octokit'
+gem 'netrc'
 
 # deploying
 gem 's3_website'
