@@ -19,7 +19,7 @@ end
 # build with jekyll
 def build
 	puts "start build"
-	`ruby scripts/preprocess_markdown.rb`				# preprocess markdown
+	`ruby scripts/preprocess-markdown.rb`				# preprocess markdown
 	Dir.chdir("blotter")								# drop into blotter dir
 	`jekyll build`										# run jekyll
 	Dir.chdir("..")										# climb back up to parent dir
