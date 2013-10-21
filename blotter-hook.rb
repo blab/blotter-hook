@@ -7,11 +7,11 @@ def update
 	if !Dir.exists?("blotter")							# start by cloning blotter repo
 		`git clone --recursive https://github.com/blab/blotter.git`
 	end
-	Dir.chdir("blotter")								# drop into blotter dir
-	`git submodule init`								# add modules if missed in clone	
-	`git submodule update`								
+	Dir.chdir("blotter")								# drop into blotter dir							
 	`git clean -f -d`									# remove untracked files
 	`git reset --hard HEAD`								# bring back to head state
+	`git submodule init`								# add modules if missed in clone	
+	`git submodule update`		
 	`git submodule foreach git clean -f -d`				# remove untracked files in submodules	
 	`git submodule foreach git reset --hard HEAD`		# bring submodules back to head state
 	`git pull origin master`							# git pull							
