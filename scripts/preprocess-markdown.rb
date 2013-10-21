@@ -41,4 +41,10 @@ mdarray.each { |md|
 		out.puts contents	
 	end
 	
+	# go through file and replace all links that point to .md files with the equivalent .html file
+	contents = File.open(md, "r").read
+	contents.gsub!(/\((\S+)\.md\)/, "(\\1.html)")
+	out = File.new(md, "w")
+	out.puts contents		
+	
 }
