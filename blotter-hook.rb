@@ -10,6 +10,7 @@ def update
 	Dir.chdir("blotter")								# drop into blotter dir
 	`git clean -f -d`									# remove untracked files
 	`git reset --hard HEAD`								# bring back to head state
+	`git submodule foreach git reset --hard HEAD`		# bring submodules back to head state
 	`git pull origin master`							# git pull							
 	`git submodule update`								# add modules if missed in clone
 	`git submodule foreach git pull origin master`		# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
