@@ -8,12 +8,13 @@ def update
 		`git clone --recursive https://github.com/blab/blotter.git`
 	end
 	Dir.chdir("blotter")								# drop into blotter dir
+	`git submodule init`								# add modules if missed in clone	
+	`git submodule update`								
 	`git clean -f -d`									# remove untracked files
 	`git reset --hard HEAD`								# bring back to head state
 	`git submodule foreach git clean -f -d`				# remove untracked files in submodules	
 	`git submodule foreach git reset --hard HEAD`		# bring submodules back to head state
 	`git pull origin master`							# git pull							
-	`git submodule update`								# add modules if missed in clone
 	`git submodule foreach git pull origin master`		# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
 	Dir.chdir("..")										# climb back up to parent dir
 	puts "finish update"    	
