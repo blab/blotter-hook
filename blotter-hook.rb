@@ -1,6 +1,12 @@
 require 'sinatra'
 require 'json'
 
+# global variables to store progress
+$commit = ""
+$is_updated = false
+$is_built = false
+$is_deployed = false
+
 # update with git
 def update(is_updated)
 	puts "start update"    
@@ -17,7 +23,7 @@ def update(is_updated)
 	`git submodule foreach git pull origin master`		# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
 	Dir.chdir("..")										# climb back up to parent dir
 	puts "finish update"    	
-	is_updated = true;
+	$is_updated = true;
 end
 
 # build with jekyll
@@ -32,7 +38,7 @@ def build(is_built)
 	end
 	Dir.chdir("..")										# climb back up to parent dir
 	puts "finish build"	
-	is_built = true
+	$is_built = true
 end
 
 # deploy to s3
@@ -40,21 +46,16 @@ def deploy(is_deployed)
 	puts "start deploy"    
 	`s3_website push --headless --site=blotter/_site`	# run s3_website
 	puts "finish deploy"  	
-	is_deployed = true
+	$is_deployed = true
 end
-
-commit = ""
-is_updated = false
-is_built = false
-is_deployed = false
 
 # run
 puts "Start up"
 a = Thread.new {
 	begin
-		update(is_updated)
-		build(is_built)
-		deploy(is_deployed)
+		update
+		build
+		deploy
 	rescue
 		retry
 	end
@@ -64,10 +65,10 @@ a = Thread.new {
 get '/' do
 	"
 	<p><b>blotter-hook</b>
-	<p>Last commit: #{commit}
-	<p>Updated: #{is_updated}
-	<p>Built: #{is_built}
-	<p>Deployed: #{is_deployed}
+	<p>Last commit: #{$commit}
+	<p>Updated: #{$is_updated}
+	<p>Built: #{$is_built}
+	<p>Deployed: #{$is_deployed}
 	"	
 end
 
@@ -77,21 +78,21 @@ post '/' do
 	# check if push is legitimate
   	push = JSON.parse(params[:payload])
   	owner = push["repository"]["owner"]["name"]
-  	commit = push["after"]
+  	$commit = push["after"]
   	if ["blab","trvrb","cykc"].include?(owner)
   	
-  		is_updated = false
-		is_built = false
-		is_deployed = false
+  		$is_updated = false
+		$is_built = false
+		$is_deployed = false
 
 		Thread.kill(a)
 
 		# run
 		a = Thread.new {
 			begin
-				update(is_updated)
-				build(is_built)
-				deploy(is_deployed)
+				update
+				build
+				deploy
 			rescue
 				retry
 			end
