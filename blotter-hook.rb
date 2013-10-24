@@ -2,7 +2,7 @@ require 'sinatra'
 require 'json'
 
 # update with git
-def update
+def update(is_updated)
 	puts "start update"    
 	if !Dir.exists?("blotter")							# start by cloning blotter repo
 		`git clone --recursive https://github.com/blab/blotter.git`
@@ -13,31 +13,34 @@ def update
 	`git pull origin master`							# git pull			
 	`git submodule init`								# add modules if missed in clone	
 	`git submodule update`		
-	`git submodule foreach git clean -f -d`				# remove untracked files in submodules	
-#	`git submodule foreach git reset --hard HEAD`		# bring submodules back to head state					
+	`git submodule foreach git clean -f -d`				# remove untracked files in submodules				
 	`git submodule foreach git pull origin master`		# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
 	Dir.chdir("..")										# climb back up to parent dir
 	puts "finish update"    	
-	return true
+	is_updated = true;
 end
 
 # build with jekyll
-def build
+# don't rescue from within function
+def build(is_built)
 	puts "start build"
 	`ruby scripts/preprocess-markdown.rb`				# preprocess markdown
 	Dir.chdir("blotter")								# drop into blotter dir
-	`jekyll build`										# run jekyll
+	out = `jekyll build`								# run jekyll
+	if out =~ /\rerror/
+		raise "Build error"
+	end
 	Dir.chdir("..")										# climb back up to parent dir
 	puts "finish build"	
-	return true
+	is_built = true
 end
 
 # deploy to s3
-def deploy
+def deploy(is_deployed)
 	puts "start deploy"    
 	`s3_website push --headless --site=blotter/_site`	# run s3_website
 	puts "finish deploy"  	
-	return true
+	is_deployed = true
 end
 
 commit = ""
@@ -48,9 +51,13 @@ is_deployed = false
 # run
 puts "Start up"
 a = Thread.new {
-	is_updated = update
-	is_built = build
-	is_deployed = deploy
+	begin
+		update
+		build
+		deploy
+	rescue
+		retry
+	end
 }
 
 # serve
@@ -81,9 +88,13 @@ post '/' do
 
 		# run
 		a = Thread.new {
-			is_updated = update
-			is_built = build
-			is_deployed = deploy
+			begin
+				update
+				build
+				deploy
+			rescue
+				retry
+			end
   		}	
   	
   	end
