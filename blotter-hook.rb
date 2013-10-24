@@ -52,9 +52,9 @@ is_deployed = false
 puts "Start up"
 a = Thread.new {
 	begin
-		update
-		build
-		deploy
+		update(is_updated)
+		build(is_built)
+		deploy(is_deployed)
 	rescue
 		retry
 	end
@@ -89,9 +89,9 @@ post '/' do
 		# run
 		a = Thread.new {
 			begin
-				update
-				build
-				deploy
+				update(is_updated)
+				build(is_built)
+				deploy(is_deployed)
 			rescue
 				retry
 			end
