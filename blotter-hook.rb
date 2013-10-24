@@ -8,7 +8,7 @@ $is_built = false
 $is_deployed = false
 
 # update with git
-def update(is_updated)
+def update
 	puts "start update"    
 	if !Dir.exists?("blotter")							# start by cloning blotter repo
 		`git clone --recursive https://github.com/blab/blotter.git`
@@ -28,7 +28,7 @@ end
 
 # build with jekyll
 # don't rescue from within function
-def build(is_built)
+def build
 	puts "start build"
 	`ruby scripts/preprocess-markdown.rb`				# preprocess markdown
 	Dir.chdir("blotter")								# drop into blotter dir
@@ -42,7 +42,7 @@ def build(is_built)
 end
 
 # deploy to s3
-def deploy(is_deployed)
+def deploy
 	puts "start deploy"    
 	`s3_website push --headless --site=blotter/_site`	# run s3_website
 	puts "finish deploy"  	
