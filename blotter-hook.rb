@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'yaml'
+require 'json'
 
 # global variables to store progress
 $commit = ""
