@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'json'
+require 'yaml'
 
 # global variables to store progress
 $commit = ""
@@ -7,23 +8,41 @@ $is_updated = false
 $is_built = false
 $is_deployed = false
 
-# update with git
-def update
-	puts "start update"    
-	if !Dir.exists?("blotter")							# start by cloning blotter repo
-		`git clone --recursive https://github.com/blab/blotter.git`
+# update main repo 
+def update_site
+	puts "start blotter update"    
+	if !Dir.exists?("blotter")								# start by cloning blotter repo
+		`git clone https://github.com/blab/blotter.git`
 	end
-	Dir.chdir("blotter")								# drop into blotter dir							
-	`git clean -f -d`									# remove untracked files
-	`git reset --hard HEAD`								# bring back to head state
-	`git pull origin master`							# git pull			
-	`git submodule init`								# add modules if missed in clone	
-	`git submodule update`		
-	`git submodule foreach git clean -f -d`				# remove untracked files in submodules				
-	`git submodule foreach git pull origin master`		# `git pull origin --recurse-submodules` is better, but requires git 1.7.3
-	Dir.chdir("..")										# climb back up to parent dir
-	puts "finish update"    	
-	$is_updated = true;
+	Dir.chdir("blotter")									# drop into blotter dir	
+	`git clean -f`											# remove untracked files, but keep directories
+	`git reset --hard HEAD`									# bring back to head state
+	`git pull origin master`								# git pull				
+	Dir.chdir("..")											# climb back up to parent dir
+	puts "finish blotter update"    	
+end
+	
+# update project repos
+def update_projects
+	puts "start project update"    
+	Dir.chdir("blotter")									# drop into blotter dir	
+	config = YAML.load_file("_config.yml")
+	config["projects"].each do |project|
+		puts project
+		owner = project.split('/').first
+		name = project.split('/').drop(1).join('')		
+		if !Dir.exists?(name)								# clone project repo
+			`git clone https://github.com/#{owner}/#{name}.git`
+		end
+		Dir.chdir(name)										# drop into blotter dir	
+		`git clean -f`										# remove untracked files, but keep directories
+		`git reset --hard HEAD`								# bring back to head state
+		`git pull origin master`							# git pull				
+		Dir.chdir("..")										# climb back up to parent dir		
+	end
+	Dir.chdir("..")											# climb back up to parent dir	
+	$is_updated = true	
+	puts "finish project update"    		
 end
 
 # build with jekyll
@@ -33,9 +52,6 @@ def build
 	`ruby scripts/preprocess-markdown.rb`				# preprocess markdown
 	Dir.chdir("blotter")								# drop into blotter dir
 	out = `jekyll build`								# run jekyll
-	if out =~ /\rerror/
-		raise "Build error"
-	end
 	Dir.chdir("..")										# climb back up to parent dir
 	puts "finish build"	
 	$is_built = true
@@ -52,13 +68,10 @@ end
 # run
 puts "Start up"
 a = Thread.new {
-	begin
-		update
-		build
-		deploy
-	rescue
-		retry
-	end
+	update_site
+	update_projects
+	build
+	deploy
 }
 
 # serve
@@ -89,13 +102,10 @@ post '/' do
 
 		# run
 		a = Thread.new {
-			begin
-				update
-				build
-				deploy
-			rescue
-				retry
-			end
+			update_site
+			update_projects
+			build
+			deploy
   		}	
   	
   	end

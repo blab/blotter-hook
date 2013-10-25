@@ -12,6 +12,7 @@ gem 'netrc'
 # deploying
 gem 's3_website'
 
-# webhook
+# webhook script
 gem 'sinatra'
 gem 'json'
+
