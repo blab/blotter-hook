@@ -33,7 +33,7 @@ mdarray.each { |md|
 		out.puts "---"
 		out.puts "layout: project"
 		if project_name != nil
-			title = md.sub(/^projects\//, '').sub(/.md$/, '').sub(/index$/, '')
+			title = md.sub(/^.+projects\//, '').sub(/.md$/, '').sub(/index$/, '')
 			out.puts "title: #{title}"		
 			out.puts "project: #{project_name}"
 		end
