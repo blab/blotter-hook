@@ -25,7 +25,7 @@ end
 # update project repos
 def update_projects
 	puts "start project update"    
-	Dir.chdir("blotter")									# drop into blotter dir	
+	Dir.chdir("blotter/projects")							# drop into projects dir	
 	config = YAML.load_file("_config.yml")
 	config["projects"].each do |project|
 		puts project
@@ -40,7 +40,7 @@ def update_projects
 		`git pull origin master`							# git pull				
 		Dir.chdir("..")										# climb back up to parent dir		
 	end
-	Dir.chdir("..")											# climb back up to parent dir	
+	Dir.chdir("../..")										# climb back up to base dir	
 	$is_updated = true	
 	puts "finish project update"    		
 end
