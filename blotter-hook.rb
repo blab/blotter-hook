@@ -9,16 +9,16 @@ $is_built = false
 $is_deployed = false
 
 # starting directory
-basedir = Dir.pwd
+$basedir = Dir.pwd
 
 # update main repo 
 def update_site
 	puts "start blotter update"    
-	Dir.chdir(basedir)
+	Dir.chdir($basedir)
 	if !Dir.exists?("blotter")								# start by cloning blotter repo
 		`git clone https://github.com/blab/blotter.git`
 	end
-	Dir.chdir(basedir + "/blotter")									
+	Dir.chdir($basedir + "/blotter")									
 	`git clean -f`											# remove untracked files, but keep directories
 	`git reset --hard HEAD`									# bring back to head state
 	`git pull origin master`								# git pull				
@@ -28,14 +28,13 @@ end
 # update project repos
 def update_projects
 	puts "start project update"    
-	Dir.chdir(basedir + "/blotter/projects")							
+	Dir.chdir($basedir + "/blotter")							
 	config = YAML.load_file("_config.yml")
-	config["projects"].each do |project|
-		puts project
-		owner = project.split('/').first
-		name = project.split('/').drop(1).join('')		
+	config["projects"].each do |repo|
+		name = repo.split('/').drop(1).join('')		
+		Dir.chdir($basedir + "/blotter/projects")			
 		if !Dir.exists?(name)								# clone project repo
-			`git clone https://github.com/#{owner}/#{name}.git`
+			`git clone https://github.com/#{repo}.git`
 		end
 		Dir.chdir(name)										# drop into blotter dir	
 		`git clean -f`										# remove untracked files, but keep directories
@@ -51,9 +50,9 @@ end
 # don't rescue from within function
 def build
 	puts "start build"
-	Dir.chdir(basedir)	
+	Dir.chdir($basedir)	
 	`ruby scripts/preprocess-markdown.rb`				# preprocess markdown
-	Dir.chdir(basedir + "/blotter")	
+	Dir.chdir($basedir + "/blotter")	
 	out = `jekyll build`								# run jekyll
 	puts "finish build"	
 	$is_built = true
@@ -62,7 +61,7 @@ end
 # deploy to s3
 def deploy
 	puts "start deploy"    
-	Dir.chdir(basedir)		
+	Dir.chdir($basedir)		
 	`s3_website push --headless --site=blotter/_site`	# run s3_website
 	puts "finish deploy"  	
 	$is_deployed = true
