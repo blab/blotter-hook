@@ -1,5 +1,4 @@
 require 'sinatra'
-require 'json'
 require 'yaml'
 
 # global variables to store progress
@@ -36,11 +35,10 @@ def update_projects
 		if !Dir.exists?(name)								# clone project repo
 			`git clone https://github.com/#{repo}.git`
 		end
-		Dir.chdir(name)										# drop into blotter dir	
+		Dir.chdir($basedir + "/blotter/projects/" + name)	
 		`git clean -f`										# remove untracked files, but keep directories
 		`git reset --hard HEAD`								# bring back to head state
-		`git pull origin master`							# git pull				
-		Dir.chdir("..")										# climb back up to parent dir		
+		`git pull origin master`							# git pull					
 	end
 	$is_updated = true	
 	puts "finish project update"    		
