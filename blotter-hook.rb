@@ -16,18 +16,22 @@ module Hook
 	# update main repo 
 	def self.update_site
 		puts "start blotter update"    
-		out = ""
 		Dir.chdir($basedir)
-		if !Dir.exists?("blotter")									# start by cloning blotter repo
-			out += `git clone https://github.com/blab/blotter.git`
+		if !Dir.exists?("blotter")											# start by cloning blotter repo
+			unless system "git clone https://github.com/blab/blotter.git"
+				raise "blotter update error"
+			end			
 		end
 		Dir.chdir($basedir + "/blotter")									
-		out += `git clean -f`										# remove untracked files, but keep directories
-		out += `git reset --hard HEAD`								# bring back to head state
-		out += `git pull origin master`								# git pull				
-		if out =~ /error/ || out =~ /exception/
-			raise StandardError "blotter update error"
-		end
+		unless system "git clean -f"										# remove untracked files, but keep directories
+			raise "blotter update error"
+		end			
+		unless system "git reset --hard HEAD"								# bring back to head state
+			raise "blotter update error"
+		end			
+		unless system "git pull origin master"								# git pull			
+			raise "blotter update error"
+		end				
 		puts "finish blotter update"    	
 	end
 		
@@ -37,19 +41,23 @@ module Hook
 		Dir.chdir($basedir + "/blotter")							
 		config = YAML.load_file("_config.yml")
 		config["projects"].each do |repo|
-			out = ""		
 			name = repo.split('/').drop(1).join('')		
 			Dir.chdir($basedir + "/blotter/projects")			
-			if !Dir.exists?(name)									# clone project repo
-				out += `git clone https://github.com/#{repo}.git`
+			if !Dir.exists?(name)											# clone project repo
+				unless system "git clone https://github.com/#{repo}.git"
+					raise "project update error"
+				end
 			end
 			Dir.chdir($basedir + "/blotter/projects/" + name)	
-			out += `git clean -f`									# remove untracked files, but keep directories
-			out += `git reset --hard HEAD`							# bring back to head state
-			out += `git pull origin master`							# git pull					
-			if out =~ /error/ || out =~ /exception/
-				raise StandardError "project update error"
-			end				
+			unless system "git clean -f"									# remove untracked files, but keep directories
+				raise "project update error"
+			end
+			unless system "git reset --hard HEAD"							# bring back to head state
+				raise "project update error"
+			end			
+			unless system "git pull origin master"							# git pull				
+				raise "project update error"
+			end								
 		end			
 		$is_updated = true	
 		puts "finish project update"    		
@@ -59,14 +67,12 @@ module Hook
 	# don't rescue from within function
 	def self.build
 		puts "start build"
-		out = ""		
 		Dir.chdir($basedir)	
-		`ruby scripts/preprocess-markdown.rb`						# preprocess markdown
+		`ruby scripts/preprocess-markdown.rb`								# preprocess markdown
 		Dir.chdir($basedir + "/blotter")	
-		out += `jekyll build`										# run jekyll
-		if out =~ /error/ || out =~ /exception/
-			raise StandardError "build error"
-		end				
+		unless system "jekyll build"										# run jekyll
+			raise "build error"
+		end		
 		puts "finish build"	
 		$is_built = true
 	end
@@ -74,12 +80,10 @@ module Hook
 	# deploy to s3
 	def self.deploy
 		puts "start deploy"   
-		out = ""			
 		Dir.chdir($basedir)		
-		out += `s3_website push --headless --site=blotter/_site`	# run s3_website
-		if out =~ /error/ || out =~ /exception/
-			raise StandardError "build error"
-		end					
+		unless system "s3_website push --headless --site=blotter/_site"		# run s3_website
+			raise "deploy error"
+		end			
 		puts "finish deploy"  	
 		$is_deployed = true
 	end
@@ -92,7 +96,7 @@ module Hook
 			update_projects
 			build
 			deploy	
-		rescue StandardError => e
+		rescue RuntimeError => e
 			puts e.message 
 			tries -= 1
 			if tries > 0
