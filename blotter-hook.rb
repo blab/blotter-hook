@@ -91,7 +91,7 @@ module Hook
 	# run
 	def self.run
 		begin
-			tries ||= 5
+			tries ||= 10
 			update_site
 			update_projects
 			build
@@ -100,7 +100,7 @@ module Hook
 			puts e.message 
 			tries -= 1
 			if tries > 0
-				sleep 5
+				sleep 10
 				retry
 			else
 				puts "Abort! abort!"
