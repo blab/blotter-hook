@@ -133,7 +133,7 @@ post '/' do
 	push = JSON.parse(params[:payload])
 	owner = push["repository"]["owner"]["name"]
 	$commit = push["after"]
-	if ["blab","trvrb","cykc"].include?(owner)
+	if ["blab","trvrb","cykc","mlandis"].include?(owner)
 	
 		$is_updated = false
 		$is_built = false
