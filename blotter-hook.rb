@@ -81,7 +81,7 @@ module Hook
 	def self.deploy
 		puts "start deploy"   
 		Dir.chdir($basedir)		
-		unless system "s3_website push --headless --site=blotter/_site --force"		# run s3_website
+		unless system "s3_website push --headless --site=blotter/_site"		# run s3_website
 			raise "deploy error"
 		end			
 		puts "finish deploy"  	
